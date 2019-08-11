@@ -19,10 +19,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     var sensorManager: SensorManager? = null
     val stepSensor: StepSensor = StepSensor()
     var virtualRun: VirtualRun = VirtualRun()
-    var monsterSteps: MutableList<Float>? = null
+    var virtualMonsterRun: VirtualMonsterRun? = null
     var eventQueue: Queue<Event>? = null
     var monsterAudio: MonsterAudio? = null
     var timeLengthInSeconds: Int? = null
+    var isActive = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         val mainHandler = Handler(Looper.getMainLooper())
         mainHandler.post(object : Runnable {
             override fun run() {
-                if (!virtualRun.isActive) {
+                if (!isActive) {
                     mainHandler.postDelayed(this, 1000)
                     return
                 }
@@ -58,8 +59,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 }
 
                 virtualRun.addSteps(numberOfStepsInSession)
+                virtualMonsterRun!!.addSteps()
                 val numberOfCompletedSteps = virtualRun.numberOfCompletedSteps()
-                val monsterStepsBehind = numberOfCompletedSteps - monsterSteps!![timeElapsedInSeconds]
+                val monsterStepsBehind = numberOfCompletedSteps - virtualMonsterRun!!.numberOfCompletedSteps()
                 monsterAudio!!.setMonsterAudio(monsterStepsBehind)
                 yourSteps.text = numberOfCompletedSteps.toString()
                 monsterStepsBehindYou.text = monsterStepsBehind.toString()
@@ -75,7 +77,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {}
 
     override fun onSensorChanged(event: SensorEvent) {
-        if (!virtualRun.isActive) {
+        if (!isActive) {
             return
         }
         stepSensor.setNumberOfSteps(event)
@@ -95,16 +97,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             timeBetweenProgressUpdates.text.toString().toInt()
         )
         timeLengthInSeconds = runLengthInMinutes.text.toString().toInt() * 60
-
+        virtualMonsterRun = VirtualMonsterRun(monsterStepsPerSecond.text.toString().toFloat())
         monsterAudio = MonsterAudio(applicationContext, monsterAudioConfig)
-        monsterSteps = monsterStepsFactory(monsterStepsPerSecond.text.toString().toFloat(), timeLengthInSeconds!!)
         eventQueue = eventQueueFactory(applicationContext, runConfig)
         doStartRun()
     }
 
     private fun doStartRun() {
         stepSensor.clear()
-        virtualRun.isActive = true
+        isActive = true
         monsterAudio!!.reset()
     }
 }

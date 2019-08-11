@@ -15,13 +15,13 @@ class MonsterAudio(applicationContext: Context, val monsterAudioConfig: MonsterA
     }
 
     fun setMonsterAudio(monsterStepsBehind: Float) {
-        val dinoStepVolume = volumeLevelTranspose(monsterStepVolumeLevel(monsterStepsBehind), monsterAudioConfig.steps).toFloat()
+        val dinoStepVolume = volumeLevelTranspose(monsterStepVolumeLevel(monsterStepsBehind), monsterAudioConfig.steps.toFloat()).toFloat()
         dinoSteps.setVolume(dinoStepVolume, dinoStepVolume)
 
-        val dinoVocalizationVolume = volumeLevelTranspose(monsterVocalizationVolumeLevel(monsterStepsBehind), monsterAudioConfig.vocalizations).toFloat()
+        val dinoVocalizationVolume = volumeLevelTranspose(monsterVocalizationVolumeLevel(monsterStepsBehind), monsterAudioConfig.vocalizations.toFloat()).toFloat()
         dinoVocalization.setVolume(dinoVocalizationVolume, dinoVocalizationVolume)
 
-        val dinoBackgroundVolume = volumeLevelTranspose(monsterBackgroundVolumeLevel(monsterStepsBehind), monsterAudioConfig.background).toFloat()
+        val dinoBackgroundVolume = volumeLevelTranspose(monsterBackgroundVolumeLevel(monsterStepsBehind), monsterAudioConfig.background.toFloat()).toFloat()
         dinoBackground.setVolume(dinoBackgroundVolume, dinoBackgroundVolume)
 
         playBigRoar(monsterStepsBehind)
@@ -75,7 +75,7 @@ class MonsterAudio(applicationContext: Context, val monsterAudioConfig: MonsterA
         }
     }
 
-    private fun volumeLevelTranspose(linearVolumeLevel: Double, stepsConfig: Int): Double {
+    private fun volumeLevelTranspose(linearVolumeLevel: Double, stepsConfig: Float): Double {
         return 1 - (Math.log(stepsConfig - linearVolumeLevel) / Math.log(stepsConfig.toDouble()))
     }
 }

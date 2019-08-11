@@ -1,12 +1,7 @@
 package com.example.hermes
 
-class VirtualRun {
-    var isActive: Boolean = false
-    private var allSteps: MutableList<Float> = mutableListOf()
-
-    init {
-        allSteps.add(0f)
-    }
+open class VirtualRun {
+    protected var allSteps: MutableList<Float> = mutableListOf(0f)
 
     fun addSteps(numberOfSteps: Float) {
         allSteps.add(numberOfSteps)
