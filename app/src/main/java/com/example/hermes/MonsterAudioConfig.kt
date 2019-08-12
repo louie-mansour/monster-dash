@@ -1,8 +1,6 @@
 package com.example.hermes
 
 data class MonsterAudioConfig(
-    val background: Int,
-    val steps: Int,
-    val vocalizations: Int,
-    val roar: Int,
+    val danger: Int,
+    val critical: Int,
     val roarTimeBetween: Int)

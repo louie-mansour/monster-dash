@@ -19,7 +19,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     var sensorManager: SensorManager? = null
     val stepSensor: StepSensor = StepSensor()
     var virtualRun: VirtualRun = VirtualRun()
-    var virtualMonsterRun: VirtualMonsterRun? = null
+    var virtualMonsterRun: VirtualRun = VirtualRun()
+    var monsterConfig: MonsterRunConfig? = null
     var eventQueue: Queue<Event>? = null
     var monsterAudio: MonsterAudio? = null
     var timeLengthInSeconds: Int? = null
@@ -59,9 +60,16 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 }
 
                 virtualRun.addSteps(numberOfStepsInSession)
-                virtualMonsterRun!!.addSteps()
+                var monsterSteps = virtualMonsterRun!!.numberOfCompletedSteps() + monsterConfig!!.stepsPerSecond
+                var monsterStepsBehind = numberOfStepsInSession - monsterSteps
+                if(numberOfStepsInSession - monsterSteps > monsterConfig!!.maxDistance) {
+                    monsterSteps = numberOfStepsInSession - monsterConfig!!.maxDistance
+                } else if(monsterStepsBehind < criticalDistance.text.toString().toFloat()) {
+                    monsterSteps -= monsterConfig!!.criticalDistanceRubberBanding
+                }
+                monsterStepsBehind = numberOfStepsInSession - monsterSteps
+                virtualMonsterRun!!.addSteps(monsterSteps)
                 val numberOfCompletedSteps = virtualRun.numberOfCompletedSteps()
-                val monsterStepsBehind = numberOfCompletedSteps - virtualMonsterRun!!.numberOfCompletedSteps()
                 monsterAudio!!.setMonsterAudio(monsterStepsBehind)
                 yourSteps.text = numberOfCompletedSteps.toString()
                 monsterStepsBehindYou.text = monsterStepsBehind.toString()
@@ -85,11 +93,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     fun startRun(view: View) {
         val monsterAudioConfig = MonsterAudioConfig(
-            distanceForBackgroundAudio.text.toString().toInt(),
-            distanceForMonsterSteps.text.toString().toInt(),
-            distanceForMonsterVocalizations.text.toString().toInt(),
-            distanceForBigRoar.text.toString().toInt(),
-            timeBetweenRoarsInSeconds.text.toString().toInt()
+            dangerDistance.text.toString().toInt(),
+            criticalDistance.text.toString().toInt(),
+            bigRoarRepeats.text.toString().toInt()
+        )
+
+        monsterConfig = MonsterRunConfig(
+            maxDistance.text.toString().toFloat(),
+            criticalDecrease.text.toString().toFloat(),
+            monsterStepsPerSecond.text.toString().toFloat()
         )
 
         val runConfig = RunConfig(
@@ -97,7 +109,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             timeBetweenProgressUpdates.text.toString().toInt()
         )
         timeLengthInSeconds = runLengthInMinutes.text.toString().toInt() * 60
-        virtualMonsterRun = VirtualMonsterRun(monsterStepsPerSecond.text.toString().toFloat())
         monsterAudio = MonsterAudio(applicationContext, monsterAudioConfig)
         eventQueue = eventQueueFactory(applicationContext, runConfig)
         doStartRun()

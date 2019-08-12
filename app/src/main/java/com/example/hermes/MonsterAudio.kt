@@ -15,13 +15,13 @@ class MonsterAudio(applicationContext: Context, val monsterAudioConfig: MonsterA
     }
 
     fun setMonsterAudio(monsterStepsBehind: Float) {
-        val dinoStepVolume = volumeLevelTranspose(monsterStepVolumeLevel(monsterStepsBehind), monsterAudioConfig.steps.toFloat()).toFloat()
+        val dinoStepVolume = volumeLevelTranspose(monsterStepVolumeLevel(monsterStepsBehind), monsterAudioConfig.danger.toFloat()).toFloat()
         dinoSteps.setVolume(dinoStepVolume, dinoStepVolume)
 
-        val dinoVocalizationVolume = volumeLevelTranspose(monsterVocalizationVolumeLevel(monsterStepsBehind), monsterAudioConfig.vocalizations.toFloat()).toFloat()
+        val dinoVocalizationVolume = volumeLevelTranspose(monsterVocalizationVolumeLevel(monsterStepsBehind), monsterAudioConfig.danger.toFloat()).toFloat()
         dinoVocalization.setVolume(dinoVocalizationVolume, dinoVocalizationVolume)
 
-        val dinoBackgroundVolume = volumeLevelTranspose(monsterBackgroundVolumeLevel(monsterStepsBehind), monsterAudioConfig.background.toFloat()).toFloat()
+        val dinoBackgroundVolume = volumeLevelTranspose(monsterBackgroundVolumeLevel(monsterStepsBehind), monsterAudioConfig.danger.toFloat()).toFloat()
         dinoBackground.setVolume(dinoBackgroundVolume, dinoBackgroundVolume)
 
         playBigRoar(monsterStepsBehind)
@@ -48,29 +48,29 @@ class MonsterAudio(applicationContext: Context, val monsterAudioConfig: MonsterA
     }
 
     private fun monsterStepVolumeLevel(monsterStepsBehind: Float): Double {
-        if(monsterStepsBehind > monsterAudioConfig.steps) {
+        if(monsterStepsBehind > monsterAudioConfig.danger) {
             return 0.0
         }
-        return monsterAudioConfig.steps - monsterStepsBehind.toDouble()
+        return monsterAudioConfig.danger - monsterStepsBehind.toDouble()
     }
 
     private fun monsterVocalizationVolumeLevel(monsterStepsBehind: Float): Double {
-        if(monsterStepsBehind > monsterAudioConfig.vocalizations) {
+        if(monsterStepsBehind > monsterAudioConfig.danger) {
             return 0.0
         }
-        return monsterAudioConfig.vocalizations - monsterStepsBehind.toDouble()
+        return monsterAudioConfig.danger - monsterStepsBehind.toDouble()
     }
 
     private fun monsterBackgroundVolumeLevel(monsterStepsBehind: Float): Double {
-        if(monsterStepsBehind > monsterAudioConfig.background) {
-            return monsterAudioConfig.background.toDouble()
+        if(monsterStepsBehind > monsterAudioConfig.danger) {
+            return monsterAudioConfig.danger.toDouble()
         }
         return monsterStepsBehind.toDouble()
     }
 
     private fun playBigRoar(monsterStepsBehind: Float) {
         val mBigRoarLastPlayed: Int? = bigRoarLastPlayed
-        if(monsterStepsBehind <= monsterAudioConfig.roar && (mBigRoarLastPlayed == null || mBigRoarLastPlayed >= monsterAudioConfig.roarTimeBetween)) {
+        if(monsterStepsBehind <= monsterAudioConfig.critical && (mBigRoarLastPlayed == null || mBigRoarLastPlayed >= monsterAudioConfig.roarTimeBetween)) {
             dinoBigRoar.start()
         }
     }
