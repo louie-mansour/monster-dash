@@ -1,16 +1,25 @@
-package com.example.hermes
+package com.example.hermes.events
 
 import android.content.Context
 import android.media.MediaPlayer
+import com.example.hermes.R
+import com.example.hermes.TestConfigs
 import java.util.*
 
-fun eventQueueFactory(context: Context, runConfig: RunConfig): Queue<Event> {
+fun eventQueueFactory(context: Context, testConfigs: TestConfigs): Queue<Event> {
     val eventQueue:Queue<Event> = ArrayDeque()
-    val runLengthInSeconds = runConfig.runTimeInMinutes * 60
-    var timeElapsedInSeconds = runConfig.timeBetweenUpdatesInSeconds
+    val runLengthInSeconds = testConfigs.runTimeInSeconds
+    var timeElapsedInSeconds = testConfigs.timeBetweenUpdatesInSeconds
     while(timeElapsedInSeconds <= runLengthInSeconds) {
-        eventQueue.add(Event(timeElapsedInSeconds, MediaPlayer.create(context, findAudioFile(100 * timeElapsedInSeconds.toDouble() / runLengthInSeconds))))
-        timeElapsedInSeconds += runConfig.timeBetweenUpdatesInSeconds
+        eventQueue.add(
+            Event(
+                timeElapsedInSeconds,
+                MediaPlayer.create(context,
+                    findAudioFile(100 * timeElapsedInSeconds.toDouble() / runLengthInSeconds)
+                )
+            )
+        )
+        timeElapsedInSeconds += testConfigs.timeBetweenUpdatesInSeconds
     }
     return eventQueue
 }
@@ -33,7 +42,7 @@ private fun findAudioFile(percentComplete: Double): Int {
         percentComplete < 70.0 -> return R.raw.sixty_five_percent_complete
         percentComplete < 75.0 -> return R.raw.seventy_percent_complete
         percentComplete < 80.0 -> return R.raw.seventy_five_percent_complete
-        percentComplete < 85.0 -> return R.raw.eight_percent_complete
+        percentComplete < 85.0 -> return R.raw.eighty_percent_complete
         percentComplete < 90.0 -> return R.raw.eighty_five_percent_complete
         percentComplete < 95.0 -> return R.raw.ninety_percent_complete
         percentComplete < 100.0 -> return R.raw.ninety_five_percent_complete

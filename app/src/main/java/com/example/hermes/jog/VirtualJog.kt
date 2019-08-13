@@ -1,10 +1,11 @@
-package com.example.hermes
+package com.example.hermes.jog
 
-open class VirtualRun {
-    protected var allSteps: MutableList<Float> = mutableListOf(0f)
+class VirtualJog {
+    private var allSteps: MutableList<Float> = mutableListOf(0f)
 
-    fun addSteps(numberOfSteps: Float) {
+    fun addSteps(numberOfSteps: Float): VirtualJog {
         allSteps.add(numberOfSteps)
+        return this
     }
 
     fun timeElapsedInSeconds(): Int {

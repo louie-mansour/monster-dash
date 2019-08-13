@@ -1,4 +1,4 @@
-package com.example.hermes
+package com.example.hermes.steps
 
 import android.hardware.SensorEvent
 
