@@ -13,7 +13,8 @@ import android.view.View
 import com.example.hermes.R
 import com.example.hermes.TestConfigs
 import com.example.hermes.audio.MonsterAudioService
-import com.example.hermes.events.eventQueueFactory
+import com.example.hermes.audio.ProgressAudioPlayerService
+import com.example.hermes.events.EventQueueService
 import com.example.hermes.jog.VirtualJog
 import com.example.hermes.steps.StepSensor
 import com.example.hermes.steps.calculateMonsterSteps
@@ -22,8 +23,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), SensorEventListener {
 
     val stepSensor: StepSensor = StepSensor()
-    var virtualJog: VirtualJog = VirtualJog()
-    var virtualMonsterJog: VirtualJog = VirtualJog()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,12 +42,17 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     fun onClickStartJog(view: View) {
         val testConfigs = setupTestConfigs()
         val monsterAudioService = MonsterAudioService(applicationContext, testConfigs)
-        val eventQueue = eventQueueFactory(applicationContext, testConfigs)
+        val progressAudioService = ProgressAudioPlayerService(applicationContext)
+        val eventQueueService = EventQueueService(progressAudioService)
+        val eventQueue = eventQueueService.eventQueueFactory(testConfigs)
 
         stepSensor.clear()
         monsterAudioService.playAudio()
 
         val mainHandler = Handler(Looper.getMainLooper())
+        var virtualJog = VirtualJog()
+        var virtualMonsterJog = VirtualJog()
+
 
         mainHandler.post(object : Runnable {
             override fun run() {
