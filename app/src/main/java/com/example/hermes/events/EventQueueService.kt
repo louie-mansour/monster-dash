@@ -9,6 +9,9 @@ class EventQueueService(private val progressAudioPlayerService: ProgressAudioPla
         val eventQueue = PriorityQueue<Event>()
         val runLengthInSeconds = testConfigs.runTimeInSeconds
         var timeElapsedInSeconds = testConfigs.timeBetweenUpdatesInSeconds
+        if(timeElapsedInSeconds <= 5) {
+            throw IllegalArgumentException("timeBetweenUpdatesInSeconds must be greater than 5")
+        }
         while(timeElapsedInSeconds <= runLengthInSeconds) {
             val (audioFile, audioFileName) = progressAudioPlayerService.findAudioFile(100 * timeElapsedInSeconds.toDouble() / runLengthInSeconds)
 
