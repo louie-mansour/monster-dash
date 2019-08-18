@@ -1,10 +1,8 @@
 package com.example.hermes.audio
 
-import android.content.Context
 import android.media.MediaPlayer
 
-class NonLoopingMonsterAudioPlayer(applicationContext: Context, audioFile: Int) {
-    var mediaPlayer: MediaPlayer = MediaPlayer.create(applicationContext, audioFile)
+open class NonLoopingMonsterAudioPlayer(private val mediaPlayer: MediaPlayer) {
     var lastPlayed: Int = 0
 
     init {
@@ -12,7 +10,7 @@ class NonLoopingMonsterAudioPlayer(applicationContext: Context, audioFile: Int) 
         mediaPlayer.setVolume(1f, 1f)
     }
 
-    fun play(time: Int) {
+    open fun play(time: Int) {
         mediaPlayer.start()
         lastPlayed = time
     }

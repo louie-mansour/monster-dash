@@ -5,6 +5,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,7 +13,9 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.example.hermes.R
 import com.example.hermes.TestConfigs
+import com.example.hermes.audio.LoopingMonsterAudioPlayer
 import com.example.hermes.audio.MonsterAudioService
+import com.example.hermes.audio.NonLoopingMonsterAudioPlayer
 import com.example.hermes.audio.ProgressAudioPlayerService
 import com.example.hermes.events.EventQueueService
 import com.example.hermes.jog.VirtualJog
@@ -41,7 +44,16 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     fun onClickStartJog(view: View) {
         val testConfigs = setupTestConfigs()
-        val monsterAudioService = MonsterAudioService(applicationContext, testConfigs)
+        val monsterFootsteps = LoopingMonsterAudioPlayer(MediaPlayer.create(applicationContext, R.raw.dinosaur_steps_amp))
+        val monsterVocalizations = LoopingMonsterAudioPlayer(MediaPlayer.create(applicationContext, R.raw.dinosaur_vocalization))
+        val backgroundNoise = LoopingMonsterAudioPlayer(MediaPlayer.create(applicationContext, R.raw.dinosaur_background_quieter))
+        val monsterCriticalNoise = NonLoopingMonsterAudioPlayer(MediaPlayer.create(applicationContext, R.raw.dinosaur_big_roar))
+        val monsterAudioService = MonsterAudioService(
+            monsterFootsteps,
+            monsterVocalizations,
+            backgroundNoise,
+            monsterCriticalNoise,
+            testConfigs)
         val progressAudioService = ProgressAudioPlayerService(applicationContext)
         val eventQueueService = EventQueueService(progressAudioService)
         val eventQueue = eventQueueService.eventQueueFactory(testConfigs)

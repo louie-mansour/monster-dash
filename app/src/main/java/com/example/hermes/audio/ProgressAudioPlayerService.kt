@@ -14,7 +14,7 @@ open class ProgressAudioPlayerService(private val context: Context) {
             percentComplete < 25.0 -> return Pair(MediaPlayer.create(context, R.raw.twenty_percent_complete), "twenty_percent_complete")
             percentComplete < 30.0 -> return Pair(MediaPlayer.create(context, R.raw.twenty_five_percent_complete), "twenty_five_percent_complete")
             percentComplete < 35.0 -> return Pair(MediaPlayer.create(context, R.raw.thirty_percent_complete), "thirty_percent_complete")
-            percentComplete < 40.0 -> return Pair(MediaPlayer.create(context, R.raw.thrity_five_percent_complete), "thrity_five_percent_complete")
+            percentComplete < 40.0 -> return Pair(MediaPlayer.create(context, R.raw.thirty_five_percent_complete), "thirty_five_percent_complete")
             percentComplete < 45.0 -> return Pair(MediaPlayer.create(context, R.raw.forty_percent_complete), "forty_percent_complete")
             percentComplete < 50.0 -> return Pair(MediaPlayer.create(context, R.raw.forty_five_percent_complete), "forty_five_percent_complete")
             percentComplete < 55.0 -> return Pair(MediaPlayer.create(context, R.raw.fifty_percent_complete), "fifty_percent_complete")
