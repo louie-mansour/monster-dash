@@ -9,8 +9,9 @@ fun calculateMonsterSteps(virtualMonsterJog: VirtualJog, testConfigs: TestConfig
 
     if(numberOfStepsInSession - monsterSteps > testConfigs.maxDistance) {
         monsterSteps = numberOfStepsInSession - testConfigs.maxDistance
-    } else if(monsterStepsBehind < testConfigs.critical) {
+    }
+    if(monsterStepsBehind < testConfigs.critical) {
         monsterSteps -= testConfigs.criticalDistanceRubberBanding
     }
-    return numberOfStepsInSession - monsterSteps
+    return monsterSteps
 }

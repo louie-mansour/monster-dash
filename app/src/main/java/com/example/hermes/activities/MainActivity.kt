@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {}
 
     override fun onSensorChanged(event: SensorEvent) {
-        stepSensor.setNumberOfSteps(event)
+        stepSensor.setNumberOfSteps(event.values[0])
     }
 
     fun onClickStartJog(view: View) {

@@ -1,10 +1,8 @@
 package com.example.hermes.steps
 
-import android.hardware.SensorEvent
-
 class StepSensor {
-    var firstStepInSessionSinceLastReboot: Float? = null
-    var numberOfStepsSinceLastReboot: Float? = null
+    private var firstStepInSessionSinceLastReboot: Float? = null
+    private var numberOfStepsSinceLastReboot: Float? = null
 
     fun numberOfStepsInSession(): Float? {
         val firstStepInSessionSinceLastReboot = firstStepInSessionSinceLastReboot
@@ -13,15 +11,14 @@ class StepSensor {
         if (null == firstStepInSessionSinceLastReboot || null == numberOfStepsSinceLastReboot) {
             return null
         }
-        return numberOfStepsSinceLastReboot - firstStepInSessionSinceLastReboot + 1
+        return numberOfStepsSinceLastReboot - firstStepInSessionSinceLastReboot
     }
 
-    fun setNumberOfSteps(event: SensorEvent) {
-        val value = event.values[0]
+    fun setNumberOfSteps(steps: Float) {
         if (null == firstStepInSessionSinceLastReboot) {
-            firstStepInSessionSinceLastReboot = value
+            firstStepInSessionSinceLastReboot = steps
         }
-        numberOfStepsSinceLastReboot = value
+        numberOfStepsSinceLastReboot = steps
     }
 
     fun clear() {
