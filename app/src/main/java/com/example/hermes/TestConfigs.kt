@@ -8,5 +8,6 @@ class TestConfigs(
     val criticalDistanceRubberBanding: Float,
     val stepsPerSecond: Float,
     val runTimeInSeconds: Int,
-    val timeBetweenUpdatesInSeconds: Int
+    val timeBetweenUpdatesInSeconds: Int,
+    val rampUpTime: Int
 )

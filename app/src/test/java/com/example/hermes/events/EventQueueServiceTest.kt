@@ -109,7 +109,8 @@ class EventQueueServiceTest {
             0f,
             0f,
             runTimeInSeconds,
-            timeBetweenUpdatesInSeconds
+            timeBetweenUpdatesInSeconds,
+            0
         )
     }
 }

@@ -112,7 +112,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             criticalDecrease.text.toString().toFloat(),
             monsterStepsPerSecond.text.toString().toFloat(),
             runLengthInMinutes.text.toString().toInt() * 60,
-            timeBetweenProgressUpdates.text.toString().toInt()
+            timeBetweenProgressUpdates.text.toString().toInt(),
+            rampUpTime.text.toString().toInt()
         )
     }
 }
