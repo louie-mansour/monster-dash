@@ -9,5 +9,5 @@ class TestConfigs(
     val stepsPerSecond: Float,
     val runTimeInSeconds: Int,
     val timeBetweenUpdatesInSeconds: Int,
-    val rampUpTime: Int
+    val rampUpDuration: Int
 )

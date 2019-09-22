@@ -19,8 +19,8 @@ import com.molasys.hermes.audio.NonLoopingMonsterAudioPlayer
 import com.molasys.hermes.audio.ProgressAudioPlayerService
 import com.molasys.hermes.events.EventQueueService
 import com.molasys.hermes.jog.VirtualJog
+import com.molasys.hermes.steps.MonsterStepsService
 import com.molasys.hermes.steps.StepSensor
-import com.molasys.hermes.steps.calculateMonsterSteps
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         val monsterVocalizations = LoopingMonsterAudioPlayer(MediaPlayer.create(applicationContext, R.raw.dinosaur_vocalization))
         val backgroundNoise = LoopingMonsterAudioPlayer(MediaPlayer.create(applicationContext, R.raw.dinosaur_background_quieter))
         val monsterCriticalNoise = NonLoopingMonsterAudioPlayer(MediaPlayer.create(applicationContext, R.raw.dinosaur_big_roar))
+
         val monsterAudioService = MonsterAudioService(
             monsterFootsteps,
             monsterVocalizations,
@@ -56,22 +57,23 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             testConfigs)
         val progressAudioService = ProgressAudioPlayerService(applicationContext)
         val eventQueueService = EventQueueService(progressAudioService)
+        val MonsterStepsService = MonsterStepsService(testConfigs)
         val eventQueue = eventQueueService.eventQueueFactory(testConfigs)
 
         stepSensor.clear()
         monsterAudioService.playAudio()
 
         val mainHandler = Handler(Looper.getMainLooper())
-        var virtualJog = VirtualJog()
-        var virtualMonsterJog = VirtualJog()
+        var userJog = VirtualJog()
+        var monsterJog = VirtualJog()
 
 
         mainHandler.post(object : Runnable {
             override fun run() {
-                val numberOfStepsInSession = stepSensor.numberOfStepsInSession()
-                val timeElapsedInSeconds = virtualJog.timeElapsedInSeconds()
+                val userSteps = stepSensor.numberOfStepsInSession()
+                val timeElapsedInSeconds = userJog.timeElapsedInSeconds()
 
-                if(numberOfStepsInSession == null) {
+                if(userSteps == null) {
                     mainHandler.postDelayed(this, 1000); return
                 }
                 if(eventQueue.isEmpty()) {
@@ -81,17 +83,17 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     eventQueue.poll().audio.start()
                 }
 
-                virtualJog = virtualJog.addSteps(numberOfStepsInSession)
+                userJog = userJog.addSteps(userSteps)
 
-                val monsterSteps = calculateMonsterSteps(virtualJog, testConfigs, numberOfStepsInSession)
-                virtualMonsterJog = virtualMonsterJog.addSteps(monsterSteps)
+                val monsterSteps = MonsterStepsService.calculateMonsterSteps(monsterJog, userJog.numberOfCompletedSteps())
+                monsterJog = monsterJog.addSteps(monsterSteps)
 
                 // set monster audio to new levels
-                val monsterStepsBehind = numberOfStepsInSession - monsterSteps
+                val monsterStepsBehind = userSteps - monsterSteps
                 monsterAudioService.updateAudio(monsterStepsBehind, timeElapsedInSeconds)
 
                 // update UI
-                val numberOfCompletedSteps = virtualJog.numberOfCompletedSteps()
+                val numberOfCompletedSteps = userJog.numberOfCompletedSteps()
                 yourSteps.text = numberOfCompletedSteps.toString()
                 monsterStepsBehindYou.text = monsterStepsBehind.toString()
                 time.text = String.format("%ds", timeElapsedInSeconds)

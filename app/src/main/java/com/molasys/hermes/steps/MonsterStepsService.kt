@@ -3,24 +3,33 @@ package com.molasys.hermes.steps
 import com.molasys.hermes.TestConfigs
 import com.molasys.hermes.jog.VirtualJog
 
-fun calculateMonsterSteps(virtualMonsterJog: VirtualJog, testConfigs: TestConfigs, numberOfStepsInSession: Float): Float {
-    val timeElapsedInSeconds = virtualMonsterJog.timeElapsedInSeconds()
-    val numberOfCompletedSteps = virtualMonsterJog.numberOfCompletedSteps()
-    val rampUpTime = testConfigs.rampUpTime
-    val stepsPerSecond = testConfigs.stepsPerSecond
-    val isRampUp = timeElapsedInSeconds <= rampUpTime
+class MonsterStepsService(testConfigs: TestConfigs) {
+    private val stepsPerSecond = testConfigs.stepsPerSecond
+    private val criticalDistance = testConfigs.critical
+    private val criticalDistanceRubberBanding = testConfigs.criticalDistanceRubberBanding
+    private val maxDistance = testConfigs.maxDistance
+    private val rampUpDuration = testConfigs.rampUpDuration
+    private var timeOfLastRampUp = 0f
 
-    var monsterSteps = numberOfCompletedSteps + when(isRampUp) {
-        true -> (stepsPerSecond * timeElapsedInSeconds) / rampUpTime
-        false -> stepsPerSecond
-    }
-    val monsterStepsBehind = numberOfStepsInSession - monsterSteps
+    fun calculateMonsterSteps(monsterJog: VirtualJog, userSteps: Float): Float {
+        val timeElapsedInSeconds = monsterJog.timeElapsedInSeconds()
+        val isRampingUp = timeElapsedInSeconds <= timeOfLastRampUp + rampUpDuration
 
-    if(monsterStepsBehind < testConfigs.critical && !isRampUp) {
-        monsterSteps -= testConfigs.criticalDistanceRubberBanding
+        var monsterSteps = monsterJog.numberOfCompletedSteps() + when (isRampingUp) {
+            true -> stepsPerSecond * ((timeElapsedInSeconds - timeOfLastRampUp) / rampUpDuration)
+            false -> stepsPerSecond
+        }
+        val monsterStepsBehind = userSteps - monsterSteps
+
+        if (monsterStepsBehind < criticalDistance && !isRampingUp) {
+            monsterSteps -= criticalDistanceRubberBanding }
+        if (userSteps - monsterSteps > maxDistance) {
+            monsterSteps = userSteps - maxDistance
+        }
+        return monsterSteps
     }
-    if(numberOfStepsInSession - monsterSteps > testConfigs.maxDistance) {
-        monsterSteps = numberOfStepsInSession - testConfigs.maxDistance
+
+    fun startNewRampUp(currentNumberOfSecondsElapsed: Float) {
+        timeOfLastRampUp = currentNumberOfSecondsElapsed
     }
-    return monsterSteps
 }
