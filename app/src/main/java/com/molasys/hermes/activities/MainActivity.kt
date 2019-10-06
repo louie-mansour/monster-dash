@@ -48,16 +48,18 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         val monsterVocalizations = LoopingMonsterAudioPlayer(MediaPlayer.create(applicationContext, R.raw.dinosaur_vocalization))
         val backgroundNoise = LoopingMonsterAudioPlayer(MediaPlayer.create(applicationContext, R.raw.dinosaur_background_quieter))
         val monsterCriticalNoise = NonLoopingMonsterAudioPlayer(MediaPlayer.create(applicationContext, R.raw.dinosaur_big_roar))
+        val monsterBiteNoise = NonLoopingMonsterAudioPlayer(MediaPlayer.create(applicationContext, R.raw.dinosaur_bite))
 
         val monsterAudioService = MonsterAudioService(
             monsterFootsteps,
             monsterVocalizations,
             backgroundNoise,
             monsterCriticalNoise,
+            monsterBiteNoise,
             testConfigs)
         val progressAudioService = ProgressAudioPlayerService(applicationContext)
         val eventQueueService = EventQueueService(progressAudioService)
-        val MonsterStepsService = MonsterStepsService(testConfigs)
+        val monsterStepsService = MonsterStepsService(testConfigs)
         val eventQueue = eventQueueService.eventQueueFactory(testConfigs)
 
         stepSensor.clear()
@@ -85,7 +87,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
                 userJog = userJog.addSteps(userSteps)
 
-                val monsterSteps = MonsterStepsService.calculateMonsterSteps(monsterJog, userJog.numberOfCompletedSteps())
+                val monsterSteps = monsterStepsService.calculateMonsterSteps(monsterJog, userJog.numberOfCompletedSteps())
                 monsterJog = monsterJog.addSteps(monsterSteps)
 
                 // set monster audio to new levels

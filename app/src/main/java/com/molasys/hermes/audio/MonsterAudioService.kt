@@ -7,6 +7,7 @@ class MonsterAudioService(
     private val monsterVocalizations: LoopingMonsterAudioPlayer,
     private val backgroundNoise: LoopingMonsterAudioPlayer,
     private val monsterCriticalNoise: NonLoopingMonsterAudioPlayer,
+    private val monsterBiteNoise: NonLoopingMonsterAudioPlayer,
     private val testConfigs: TestConfigs) {
 
     fun playAudio() {
@@ -23,6 +24,10 @@ class MonsterAudioService(
 
         val backgroundVolume = decreasingVolumeWithProximity(monsterStepsBehind, testConfigs.danger)
         backgroundNoise.setVolume(backgroundVolume)
+        if(monsterStepsBehind == 0f) {
+            monsterBiteNoise.play(timeElapsedInSeconds)
+            return
+        }
 
         val timeSinceLastRoar = timeElapsedInSeconds - monsterCriticalNoise.lastPlayed
         if(monsterStepsBehind <= testConfigs.critical && (timeSinceLastRoar >= testConfigs.roarTimeBetween || monsterCriticalNoise.lastPlayed == 0)) {

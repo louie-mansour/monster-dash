@@ -81,6 +81,30 @@ class MonsterStepServiceTest{
         Assert.assertEquals(30.4f, monsterSteps)
     }
 
+    @Test
+    fun monsterDoesNotRunPastRunner() {
+        val monsterSteps = monsterStepsService.calculateMonsterSteps(virtualMonsterJog, 10f)
+        Assert.assertEquals(10f, monsterSteps)
+    }
+
+    @Test
+    fun monsterRampUpStartsAfterSharingSameSpotAsRunner() {
+        val virtualMonsterJog = VirtualJog()
+            .addSteps(2f)
+            .addSteps(4f)
+            .addSteps(6f)
+            .addSteps(8f)
+            .addSteps(9f)
+            .addSteps(10f)
+
+        var monsterSteps = monsterStepsService.calculateMonsterSteps(virtualMonsterJog, 10f)
+        Assert.assertEquals(10f, monsterSteps)
+
+        virtualMonsterJog.addSteps(10f)
+        monsterSteps = monsterStepsService.calculateMonsterSteps(virtualMonsterJog, 20f)
+        Assert.assertEquals(10.4f, monsterSteps)
+    }
+
     private fun testConfigsFactory(stepsPerSecond: Float, maxDistance: Float, criticalDistance: Int, criticalDistanceRubberBanding: Float, rampUpTime: Int): TestConfigs {
         return TestConfigs(
             0,

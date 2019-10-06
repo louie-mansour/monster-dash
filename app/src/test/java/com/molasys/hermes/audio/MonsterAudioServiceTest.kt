@@ -16,6 +16,7 @@ class MonsterAudioServiceTest {
     private val monsterVocalizations = Mockito.spy(LoopingMonsterAudioPlayer(mediaPlayer))
     private val backgroundNoise = Mockito.spy(LoopingMonsterAudioPlayer(mediaPlayer))
     private val monsterCriticalNoise = Mockito.spy(NonLoopingMonsterAudioPlayer(mediaPlayer))
+    private val monsterBiteNoise = Mockito.spy(NonLoopingMonsterAudioPlayer(mediaPlayer))
 
     @Test
     fun playAudio() {
@@ -24,6 +25,7 @@ class MonsterAudioServiceTest {
             monsterVocalizations,
             backgroundNoise,
             monsterCriticalNoise,
+            monsterBiteNoise,
             testConfigsFactory(30, 10, 5)
         )
 
@@ -45,6 +47,7 @@ class MonsterAudioServiceTest {
             monsterVocalizations,
             backgroundNoise,
             monsterCriticalNoise,
+            monsterBiteNoise,
             testConfig
         )
 
@@ -83,6 +86,7 @@ class MonsterAudioServiceTest {
             monsterVocalizations,
             backgroundNoise,
             monsterCriticalNoise,
+            monsterBiteNoise,
             testConfig
         )
 
@@ -100,6 +104,7 @@ class MonsterAudioServiceTest {
             monsterVocalizations,
             backgroundNoise,
             monsterCriticalNoise,
+            monsterBiteNoise,
             testConfig
         )
 
@@ -117,6 +122,7 @@ class MonsterAudioServiceTest {
             monsterVocalizations,
             backgroundNoise,
             monsterCriticalNoise,
+            monsterBiteNoise,
             testConfig
         )
 
@@ -134,6 +140,7 @@ class MonsterAudioServiceTest {
             monsterVocalizations,
             backgroundNoise,
             monsterCriticalNoise,
+            monsterBiteNoise,
             testConfig
         )
 

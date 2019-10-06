@@ -22,9 +22,14 @@ class MonsterStepsService(testConfigs: TestConfigs) {
         val monsterStepsBehind = userSteps - monsterSteps
 
         if (monsterStepsBehind < criticalDistance && !isRampingUp) {
-            monsterSteps -= criticalDistanceRubberBanding }
+            monsterSteps -= criticalDistanceRubberBanding
+        }
         if (userSteps - monsterSteps > maxDistance) {
             monsterSteps = userSteps - maxDistance
+        }
+        if (monsterSteps >= userSteps) {
+            monsterSteps = userSteps
+            startNewRampUp(timeElapsedInSeconds.toFloat())
         }
         return monsterSteps
     }
