@@ -5,10 +5,10 @@ import org.junit.Assert
 import org.junit.Test
 import org.mockito.Mockito
 
-class ProgressAudioPlayerServiceTest {
+class ProgressAudioServiceTest {
 
     private val dummyContext = Mockito.mock(Context::class.java)
-    private val progressAudioPlayerService = ProgressAudioPlayerService(dummyContext)
+    private val progressAudioPlayerService = ProgressAudioService(dummyContext)
 
     @Test
     fun findAudioFile() {

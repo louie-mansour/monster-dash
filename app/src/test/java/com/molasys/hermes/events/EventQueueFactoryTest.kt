@@ -2,26 +2,26 @@ package com.molasys.hermes.events
 
 import android.media.MediaPlayer
 import com.molasys.hermes.TestConfigs
-import com.molasys.hermes.audio.ProgressAudioPlayerService
+import com.molasys.hermes.audio.ProgressAudioService
 import org.junit.Assert
 import org.junit.Test
 import org.mockito.Mockito
 
-class EventQueueServiceTest {
+class EventQueueFactoryTest {
 
-    private val progressAudioPlayerService: ProgressAudioPlayerService = Mockito.mock(ProgressAudioPlayerService::class.java)
+    private val progressAudioService: ProgressAudioService = Mockito.mock(ProgressAudioService::class.java)
 
     init {
-        Mockito.`when`(progressAudioPlayerService.findAudioFile(Mockito.anyDouble()))
+        Mockito.`when`(progressAudioService.findAudioFile(Mockito.anyDouble()))
             .thenReturn(Pair(Mockito.mock(MediaPlayer::class.java), "dummyName"))
     }
 
-    private val eventQueueService = EventQueueService(progressAudioPlayerService)
+    private val eventQueueService = EventQueueFactory(progressAudioService)
 
     @Test
     fun oneMinuteRunWithTwelveSecondUpdates() {
         val testConfigs = testConfigsFactory(60, 12)
-        val eventQueue = eventQueueService.eventQueueFactory(testConfigs)
+        val eventQueue = eventQueueService.make(testConfigs)
 
         Assert.assertEquals(5, eventQueue.size)
         Assert.assertEquals(12, eventQueue.poll().timeElapsedInSeconds)
@@ -34,7 +34,7 @@ class EventQueueServiceTest {
     @Test
     fun fiveMinuteRunWithThirtySecondUpdates() {
         val testConfigs = testConfigsFactory(300, 30)
-        val eventQueue = eventQueueService.eventQueueFactory(testConfigs)
+        val eventQueue = eventQueueService.make(testConfigs)
 
         Assert.assertEquals(10, eventQueue.size)
         Assert.assertEquals(30, eventQueue.poll().timeElapsedInSeconds)
@@ -52,7 +52,7 @@ class EventQueueServiceTest {
     @Test
     fun thirtyMinuteRunWithThirtySecondUpdates() {
         val testConfigs = testConfigsFactory(1800, 60)
-        val eventQueue = eventQueueService.eventQueueFactory(testConfigs)
+        val eventQueue = eventQueueService.make(testConfigs)
 
         Assert.assertEquals(30, eventQueue.size)
         Assert.assertEquals(60, eventQueue.poll().timeElapsedInSeconds)
@@ -90,14 +90,14 @@ class EventQueueServiceTest {
     @Test
     fun runTimeOfZeroSeconds() {
         val testConfigs = testConfigsFactory(0, 30)
-        val eventQueue = eventQueueService.eventQueueFactory(testConfigs)
+        val eventQueue = eventQueueService.make(testConfigs)
         Assert.assertEquals(0, eventQueue.size)
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun timeBetweenUpdatesOfLessThanFive() {
         val testConfigs = testConfigsFactory(300, 3)
-        eventQueueService.eventQueueFactory(testConfigs)
+        eventQueueService.make(testConfigs)
     }
 
     private fun testConfigsFactory(runTimeInSeconds: Int, timeBetweenUpdatesInSeconds: Int): TestConfigs {

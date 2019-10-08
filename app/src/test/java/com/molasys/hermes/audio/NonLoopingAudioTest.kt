@@ -5,12 +5,12 @@ import org.junit.Assert
 import org.junit.Test
 import org.mockito.Mockito
 
-class NonLoopingMonsterAudioPlayerTest {
+class NonLoopingAudioTest {
     private val mediaPlayer = Mockito.mock(MediaPlayer::class.java)
 
     @Test
     fun isNotLoopingWithFullVolumeOnConstruction() {
-        NonLoopingMonsterAudioPlayer(mediaPlayer)
+        NonLoopingAudio(mediaPlayer)
         Mockito.verify(mediaPlayer, Mockito.times(1)).isLooping = false
         Mockito.verify(mediaPlayer, Mockito.times(1)).setVolume(1f, 1f)
         Mockito.verify(mediaPlayer, Mockito.times(0)).start()
@@ -18,7 +18,7 @@ class NonLoopingMonsterAudioPlayerTest {
 
     @Test
     fun playStartsTheMediaPlayerAndRecordsTheTimeLastPlayed() {
-        val nonLoopingMonsterAudioPlayer = NonLoopingMonsterAudioPlayer(mediaPlayer)
+        val nonLoopingMonsterAudioPlayer = NonLoopingAudio(mediaPlayer)
         Assert.assertEquals(0, nonLoopingMonsterAudioPlayer.lastPlayed)
 
         nonLoopingMonsterAudioPlayer.play(5)

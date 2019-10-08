@@ -1,4 +1,4 @@
-package com.molasys.hermes.steps
+package com.molasys.hermes
 
 class StepSensor {
     private var firstStepInSessionSinceLastReboot: Float? = null

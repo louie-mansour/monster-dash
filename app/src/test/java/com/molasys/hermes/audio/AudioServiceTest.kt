@@ -9,18 +9,18 @@ import org.mockito.ArgumentCaptor
 
 
 
-class MonsterAudioServiceTest {
+class AudioServiceTest {
 
     private val mediaPlayer = Mockito.mock(MediaPlayer::class.java)
-    private val monsterFootsteps = Mockito.spy(LoopingMonsterAudioPlayer(mediaPlayer))
-    private val monsterVocalizations = Mockito.spy(LoopingMonsterAudioPlayer(mediaPlayer))
-    private val backgroundNoise = Mockito.spy(LoopingMonsterAudioPlayer(mediaPlayer))
-    private val monsterCriticalNoise = Mockito.spy(NonLoopingMonsterAudioPlayer(mediaPlayer))
-    private val monsterBiteNoise = Mockito.spy(NonLoopingMonsterAudioPlayer(mediaPlayer))
+    private val monsterFootsteps = Mockito.spy(LoopingAudio(mediaPlayer))
+    private val monsterVocalizations = Mockito.spy(LoopingAudio(mediaPlayer))
+    private val backgroundNoise = Mockito.spy(LoopingAudio(mediaPlayer))
+    private val monsterCriticalNoise = Mockito.spy(NonLoopingAudio(mediaPlayer))
+    private val monsterBiteNoise = Mockito.spy(NonLoopingAudio(mediaPlayer))
 
     @Test
     fun playAudio() {
-        val monsterAudioService = MonsterAudioService(
+        val monsterAudioService = AudioService(
             monsterFootsteps,
             monsterVocalizations,
             backgroundNoise,
@@ -42,7 +42,7 @@ class MonsterAudioServiceTest {
         val testConfig = testConfigsFactory(30, 10, 5)
         monsterCriticalNoise.lastPlayed = testConfig.roarTimeBetween - 1
 
-        val monsterAudioService = MonsterAudioService(
+        val monsterAudioService = AudioService(
             monsterFootsteps,
             monsterVocalizations,
             backgroundNoise,
@@ -81,7 +81,7 @@ class MonsterAudioServiceTest {
         val testConfig = testConfigsFactory(30, 10, 5)
         monsterCriticalNoise.lastPlayed = 0
 
-        val monsterAudioService = MonsterAudioService(
+        val monsterAudioService = AudioService(
             monsterFootsteps,
             monsterVocalizations,
             backgroundNoise,
@@ -99,7 +99,7 @@ class MonsterAudioServiceTest {
         val testConfig = testConfigsFactory(30, 10, 5)
         monsterCriticalNoise.lastPlayed = 1
 
-        val monsterAudioService = MonsterAudioService(
+        val monsterAudioService = AudioService(
             monsterFootsteps,
             monsterVocalizations,
             backgroundNoise,
@@ -117,7 +117,7 @@ class MonsterAudioServiceTest {
         val testConfig = testConfigsFactory(30, 10, 5)
         monsterCriticalNoise.lastPlayed = 1
 
-        val monsterAudioService = MonsterAudioService(
+        val monsterAudioService = AudioService(
             monsterFootsteps,
             monsterVocalizations,
             backgroundNoise,
@@ -135,7 +135,7 @@ class MonsterAudioServiceTest {
         val testConfig = testConfigsFactory(30, 10, 5)
         monsterCriticalNoise.lastPlayed = 0
 
-        val monsterAudioService = MonsterAudioService(
+        val monsterAudioService = AudioService(
             monsterFootsteps,
             monsterVocalizations,
             backgroundNoise,

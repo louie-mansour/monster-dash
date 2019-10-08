@@ -2,7 +2,7 @@ package com.molasys.hermes.audio
 
 import android.media.MediaPlayer
 
-open class NonLoopingMonsterAudioPlayer(private val mediaPlayer: MediaPlayer) {
+open class NonLoopingAudio(private val mediaPlayer: MediaPlayer) {
     var lastPlayed: Int = 0
 
     init {

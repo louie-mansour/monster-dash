@@ -1,5 +1,6 @@
 package com.molasys.hermes.steps
 
+import com.molasys.hermes.StepSensor
 import org.junit.Assert
 import org.junit.Test
 

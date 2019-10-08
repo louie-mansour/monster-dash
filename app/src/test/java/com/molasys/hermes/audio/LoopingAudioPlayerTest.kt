@@ -4,12 +4,12 @@ import android.media.MediaPlayer
 import org.junit.Test
 import org.mockito.Mockito
 
-class LoopingMonsterAudioPlayerPlayerTest {
+class LoopingAudioPlayerTest {
     private val mediaPlayer = Mockito.mock(MediaPlayer::class.java)
 
     @Test
     fun isLoopingWithNoVolumeOnConstruction() {
-        LoopingMonsterAudioPlayer(mediaPlayer)
+        LoopingAudio(mediaPlayer)
         Mockito.verify(mediaPlayer, Mockito.times(1)).isLooping = true
         Mockito.verify(mediaPlayer, Mockito.times(1)).setVolume(0f, 0f)
         Mockito.verify(mediaPlayer, Mockito.times(0)).start()
@@ -17,7 +17,7 @@ class LoopingMonsterAudioPlayerPlayerTest {
 
     @Test
     fun setVolumeChangesVolumeOfBothLeftAndRight() {
-        val loopingMonsterAudioVolume = LoopingMonsterAudioPlayer(mediaPlayer)
+        val loopingMonsterAudioVolume = LoopingAudio(mediaPlayer)
         loopingMonsterAudioVolume.setVolume(0.5f)
         Mockito.verify(mediaPlayer, Mockito.times(1)).setVolume(0.5f, 0.5f)
         Mockito.verify(mediaPlayer, Mockito.times(0)).start()
@@ -25,7 +25,7 @@ class LoopingMonsterAudioPlayerPlayerTest {
 
     @Test
     fun playStartsTheMediaPlayerAndDoesNotChangeVolume() {
-        val loopingMonsterAudioVolume = LoopingMonsterAudioPlayer(mediaPlayer)
+        val loopingMonsterAudioVolume = LoopingAudio(mediaPlayer)
         loopingMonsterAudioVolume.play()
         Mockito.verify(mediaPlayer, Mockito.times(1)).start()
         Mockito.verify(mediaPlayer, Mockito.times(1)).setVolume(0f, 0f)

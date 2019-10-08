@@ -2,20 +2,21 @@ package com.molasys.hermes.steps
 
 import com.molasys.hermes.TestConfigs
 import com.molasys.hermes.jog.VirtualJog
+import com.molasys.hermes.monster.MonsterStepCalculator
 import org.junit.Assert
 import org.junit.Test
 
 class MonsterStepServiceTest{
 
     private val virtualMonsterJog = VirtualJog()
-        .addSteps(2f)
-        .addSteps(4f)
-        .addSteps(6f)
-        .addSteps(8f)
-        .addSteps(9f)
-        .addSteps(10f)
+        .addDistance(2f)
+        .addDistance(4f)
+        .addDistance(6f)
+        .addDistance(8f)
+        .addDistance(9f)
+        .addDistance(10f)
     private val testConfigs = testConfigsFactory(2f, 35f, 5, 0.2f, 5)
-    private val monsterStepsService = MonsterStepsService(testConfigs)
+    private val monsterStepsService = MonsterStepCalculator(testConfigs)
     @Test
     fun monsterRegularDistanceBehind() {
         val monsterSteps = monsterStepsService.calculateMonsterSteps(virtualMonsterJog, 20f)
@@ -44,7 +45,7 @@ class MonsterStepServiceTest{
     @Test
     fun monsterRampUpValueIsAsExpected() {
         val rampUpMonsterJog = VirtualJog()
-            .addSteps(10f)
+            .addDistance(10f)
         val monsterSteps = monsterStepsService.calculateMonsterSteps(rampUpMonsterJog, 20f)
         Assert.assertEquals(10.4f, monsterSteps)
     }
@@ -52,31 +53,31 @@ class MonsterStepServiceTest{
     @Test
     fun monsterRampUpTakesPrecedenceOverCriticalZone() {
         val rampUpMonsterJog = VirtualJog()
-            .addSteps(10f)
+            .addDistance(10f)
         val monsterSteps = monsterStepsService.calculateMonsterSteps(rampUpMonsterJog, 12f)
         Assert.assertEquals(10.4f, monsterSteps)
     }
 
     @Test
     fun monsterRampUpValueCanBeReset() {
-        val resetMonsterStepsService = MonsterStepsService(testConfigs)
+        val resetMonsterStepsService = MonsterStepCalculator(testConfigs)
         resetMonsterStepsService.startNewRampUp(10f)
 
         val rampUpMonsterJog = VirtualJog()
-            .addSteps(10f)
-            .addSteps(12f)
-            .addSteps(14f)
-            .addSteps(16f)
-            .addSteps(18f)
-            .addSteps(20f)
-            .addSteps(22f)
-            .addSteps(24f)
-            .addSteps(26f)
-            .addSteps(28f)
+            .addDistance(10f)
+            .addDistance(12f)
+            .addDistance(14f)
+            .addDistance(16f)
+            .addDistance(18f)
+            .addDistance(20f)
+            .addDistance(22f)
+            .addDistance(24f)
+            .addDistance(26f)
+            .addDistance(28f)
         var monsterSteps = resetMonsterStepsService.calculateMonsterSteps(rampUpMonsterJog, 40f)
         Assert.assertEquals(28f, monsterSteps)
 
-        rampUpMonsterJog.addSteps(30f)
+        rampUpMonsterJog.addDistance(30f)
         monsterSteps = resetMonsterStepsService.calculateMonsterSteps(rampUpMonsterJog, 40f)
         Assert.assertEquals(30.4f, monsterSteps)
     }
@@ -90,17 +91,17 @@ class MonsterStepServiceTest{
     @Test
     fun monsterRampUpStartsAfterSharingSameSpotAsRunner() {
         val virtualMonsterJog = VirtualJog()
-            .addSteps(2f)
-            .addSteps(4f)
-            .addSteps(6f)
-            .addSteps(8f)
-            .addSteps(9f)
-            .addSteps(10f)
+            .addDistance(2f)
+            .addDistance(4f)
+            .addDistance(6f)
+            .addDistance(8f)
+            .addDistance(9f)
+            .addDistance(10f)
 
         var monsterSteps = monsterStepsService.calculateMonsterSteps(virtualMonsterJog, 10f)
         Assert.assertEquals(10f, monsterSteps)
 
-        virtualMonsterJog.addSteps(10f)
+        virtualMonsterJog.addDistance(10f)
         monsterSteps = monsterStepsService.calculateMonsterSteps(virtualMonsterJog, 20f)
         Assert.assertEquals(10.4f, monsterSteps)
     }

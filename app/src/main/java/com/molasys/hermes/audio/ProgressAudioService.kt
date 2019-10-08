@@ -4,8 +4,8 @@ import android.content.Context
 import android.media.MediaPlayer
 import com.molasys.hermes.R
 
-open class ProgressAudioPlayerService(private val context: Context) {
-    open fun findAudioFile(percentComplete: Double): Pair<MediaPlayer, String> {
+class ProgressAudioService(private val context: Context) {
+    fun findAudioFile(percentComplete: Double): Pair<MediaPlayer, String> {
         when {
             percentComplete < 5.0 -> return Pair(MediaPlayer.create(context, R.raw.one_percent_complete), "one_percent_complete")
             percentComplete < 10.0 -> return Pair(MediaPlayer.create(context, R.raw.five_percent_complete), "five_percent_complete")
