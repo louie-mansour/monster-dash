@@ -17,17 +17,18 @@ import com.molasys.hermes.TestConfigs
 import com.molasys.hermes.audio.LoopingAudio
 import com.molasys.hermes.audio.ProgressAudioService
 import com.molasys.hermes.events.EventQueueFactory
-import com.molasys.hermes.game.GameTick
+import com.molasys.hermes.game.Game
+import com.molasys.hermes.game.Tick
 import com.molasys.hermes.monster.DINOSAUR
 import com.molasys.hermes.monster.MonsterFactory
 import com.molasys.hermes.surroundings.Background
 import com.molasys.hermes.users.User
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
 
     private val stepSensor: StepSensor = StepSensor()
+    private var runTimeInSeconds = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,21 +48,22 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     fun onClickStartJog(view: View) {
         val tickHandler = Handler(Looper.getMainLooper())
         val testConfigs = setupTestConfigs()
+        runTimeInSeconds = testConfigs.runTimeInSeconds
 
         val user = User(stepSensor)
         val dinosaur = MonsterFactory(applicationContext, testConfigs).make(DINOSAUR)
         val eventQueue = EventQueueFactory(ProgressAudioService(applicationContext)).make(testConfigs)
         val background = Background(LoopingAudio(MediaPlayer.create(applicationContext, R.raw.dinosaur_background_quieter)))
-        background.setScene()
+        val game = Game(user, dinosaur, eventQueue, background)
 
-        tickHandler.post(GameTick(tickHandler, user, dinosaur, eventQueue, background, ::updateDisplay))
+        tickHandler.post(Tick(tickHandler, game, ::updateDisplay))
     }
 
     fun updateDisplay(displayData: DisplayData) {
         yourSteps.text = displayData.numberOfCompletedSteps.toString()
         monsterStepsBehindYou.text = displayData.monsterStepsBehind.toString()
         time.text = String.format("%ds", displayData.timeElapsedInSeconds)
-        percent.text = String.format("%,d%%", 100 * displayData.timeElapsedInSeconds / displayData.runTimeInSeconds)
+        percent.text = String.format("%,d%%", 100 * displayData.timeElapsedInSeconds / runTimeInSeconds)
         eventQueueSize.text = eventQueueSize.toString()
     }
 

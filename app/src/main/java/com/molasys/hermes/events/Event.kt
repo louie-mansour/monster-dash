@@ -1,11 +1,9 @@
 package com.molasys.hermes.events
 
-import android.media.MediaPlayer
-
-class Event(val timeElapsedInSeconds: Int, val audio: MediaPlayer, val name: String): Comparable<Event> {
+abstract class Event(open val timeToPlay: Int, open val action: String): Comparable<Event> {
     override operator fun compareTo(other: Event): Int {
-        if (this.timeElapsedInSeconds > other.timeElapsedInSeconds) return 1
-        if (this.timeElapsedInSeconds < other.timeElapsedInSeconds) return -1
+        if (this.timeToPlay > other.timeToPlay) return 1
+        if (this.timeToPlay < other.timeToPlay) return -1
         return 0
     }
 }

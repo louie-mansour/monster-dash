@@ -1,78 +1,122 @@
 package com.molasys.hermes.monster.dinosaur
 
-import com.molasys.hermes.audio.ChangeableVolume
 import com.molasys.hermes.audio.LoopingAudio
 import com.molasys.hermes.audio.NonLoopingAudio
+import com.molasys.hermes.audio.increasingVolumeWithProximity
 import com.molasys.hermes.jog.VirtualJog
+import com.molasys.hermes.monster.Monster
 
 class Dinosaur(
-    val configs: DinosaurConfigs,
-    private val attack: NonLoopingAudio,
-    private val intimidate: NonLoopingAudio,
-    private val footsteps: LoopingAudio,
-    private val vocalizations: LoopingAudio
-) : ChangeableVolume {
+    configs: DinosaurConfigs,
+    private val dinosaurAudio: DinosaurAudio
+) : Monster {
+    val danger = configs.danger
+    private val critical = configs.critical
+    private val roarTimeBetween = configs.roarTimeBetween
+    private val maxDistance = configs.maxDistance
+    private val criticalDistanceRubberBanding = configs.criticalDistanceRubberBanding
+    private var stepsPerSecond = configs.stepsPerSecond
     private val virtualJog: VirtualJog = VirtualJog()
-    private var isChasing = false
     private val rampUpTime = 5
+    private var isChasing = false
     private var remainingRampUpTime = rampUpTime
 
-    fun startChasing(timeElapsedInSeconds: Int) {
-        intimidate.play(timeElapsedInSeconds)
-        footsteps.play()
-        vocalizations.play()
+    override fun startChasing(timeElapsedInSeconds: Int) {
+        dinosaurAudio.intimidate.play(timeElapsedInSeconds)
+        dinosaurAudio.footsteps.play()
+        dinosaurAudio.vocalizations.play()
         isChasing = true
     }
 
-    fun stopChasing() {
-        footsteps.stop()
-        vocalizations.stop()
+    override fun stopChasing() {
+        dinosaurAudio.footsteps.stop()
+        dinosaurAudio.vocalizations.stop()
         isChasing = false
     }
 
-    fun isChasing(): Boolean {
+    override fun isChasing(): Boolean {
         return isChasing
     }
 
-    fun addDistance(numberOfSteps: Float) {
+    override fun updateDistance(numberOfSteps: Float) {
         virtualJog.addDistance(numberOfSteps)
         if(isRampingUpSpeed()) {
             remainingRampUpTime -= 1
         }
     }
 
-    fun isRampingUpSpeed(): Boolean {
+    override fun isRampingUpSpeed(): Boolean {
         return remainingRampUpTime > 0
     }
 
-    fun rampUpSpeedModifier(): Float {
+    override fun rampUpSpeedModifier(): Float {
         return (rampUpTime - remainingRampUpTime) / rampUpTime.toFloat()
     }
 
-    fun isInIntimidationRange(distance: Float): Boolean {
-        return distance <= configs.critical
+    override fun isInIntimidationRange(distance: Float): Boolean {
+        return distance <= critical
     }
 
-    fun intimidate(timeElapsedInSeconds: Int) {
-        if (intimidate.lastPlayed + configs.roarTimeBetween < timeElapsedInSeconds) {
-            intimidate.play(timeElapsedInSeconds)
+    override fun intimidate(timeElapsedInSeconds: Int) {
+        if (dinosaurAudio.intimidate.lastPlayed + roarTimeBetween < timeElapsedInSeconds) {
+            dinosaurAudio.intimidate.play(timeElapsedInSeconds)
         }
     }
 
-    fun isInAttackRange(distance: Float): Boolean {
+    override fun isInAttackRange(distance: Float): Boolean {
         return distance <= 0f
     }
 
-    fun attack(timeElapsedInSeconds: Int) {
-        attack.play(timeElapsedInSeconds)
+    override fun attack(timeElapsedInSeconds: Int) {
+        dinosaurAudio.attack.play(timeElapsedInSeconds)
         remainingRampUpTime = rampUpTime
     }
 
-    fun distanceCovered(): Float {
+    override fun distanceCovered(): Float {
         return virtualJog.distanceCovered()
     }
 
     override fun getAudio(): List<LoopingAudio> {
-        return listOf(footsteps, vocalizations)
+        return listOf(dinosaurAudio.footsteps, dinosaurAudio.vocalizations)
+    }
+
+    override fun startSpecialEffect() {
+        dinosaurAudio.footsteps.stop()
+        dinosaurAudio.sprintingFootsteps.play()
+        dinosaurAudio.sprintingFootsteps.setVolume(1f)
+        stepsPerSecond += 0.5f
+    }
+
+    override fun stopSpecialEffect() {
+        dinosaurAudio.sprintingFootsteps.stop()
+        dinosaurAudio.footsteps.play()
+        dinosaurAudio.footsteps.setVolume(1f)
+        stepsPerSecond -= 0.5f
+    }
+
+    override fun changeVolumeByDistance(monsterStepsBehind: Float) {
+
+    }
+
+    override fun distanceToCover(monsterStepsBehind: Float): Float {
+        val isRampingUpSpeed = isRampingUpSpeed()
+        val stepsPerSecond = stepsPerSecond
+        val maxDistance = maxDistance
+
+        var monsterDistance = distanceCovered() + when (isRampingUpSpeed) {
+            true -> stepsPerSecond * rampUpSpeedModifier()
+            false -> stepsPerSecond
+        }
+
+        if (isInIntimidationRange(monsterStepsBehind) && !isRampingUpSpeed) {
+            monsterDistance -= criticalDistanceRubberBanding
+        }
+        if (monsterStepsBehind > maxDistance) {
+            monsterDistance += maxDistance - monsterDistance
+        }
+        if (monsterStepsBehind < 0) {
+            monsterDistance -= monsterStepsBehind
+        }
+        return monsterDistance
     }
 }

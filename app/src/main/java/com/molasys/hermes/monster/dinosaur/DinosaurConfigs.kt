@@ -6,6 +6,6 @@ data class DinosaurConfigs(
     val roarTimeBetween: Int,
     val maxDistance: Float,
     val criticalDistanceRubberBanding: Float,
-    val stepsPerSecond: Float,
+    var stepsPerSecond: Float,
     val runTimeInSeconds: Int
 )

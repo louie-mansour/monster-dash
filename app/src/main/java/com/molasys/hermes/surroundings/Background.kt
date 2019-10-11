@@ -5,7 +5,7 @@ import com.molasys.hermes.audio.LoopingAudio
 
 class Background(private val backgroundNoise: LoopingAudio) : ChangeableVolume {
 
-    override fun getAudio(): List<LoopingAudio> {
+    override fun updateVolume(): List<LoopingAudio> {
         return listOf(backgroundNoise)
     }
 

@@ -7,6 +7,7 @@ import com.molasys.hermes.TestConfigs
 import com.molasys.hermes.audio.LoopingAudio
 import com.molasys.hermes.audio.NonLoopingAudio
 import com.molasys.hermes.monster.dinosaur.Dinosaur
+import com.molasys.hermes.monster.dinosaur.DinosaurAudio
 import com.molasys.hermes.monster.dinosaur.DinosaurConfigs
 
 const val DINOSAUR: String = "Dinosaur"
@@ -28,8 +29,9 @@ class MonsterFactory(private val applicationContext: Context, private val testCo
                 val dinosaurIntimidate = NonLoopingAudio(MediaPlayer.create(applicationContext, R.raw.dinosaur_big_roar))
                 val dinosaurFootsteps = LoopingAudio(MediaPlayer.create(applicationContext, R.raw.dinosaur_steps_amp))
                 val dinosaurVocalizations = LoopingAudio(MediaPlayer.create(applicationContext, R.raw.dinosaur_vocalization))
+                val dinosaurAudio = DinosaurAudio(dinosaurAttack, dinosaurIntimidate, dinosaurFootsteps, dinosaurFootsteps, dinosaurVocalizations)
 
-                return Dinosaur(dinosaurConfigs, dinosaurAttack, dinosaurIntimidate, dinosaurFootsteps, dinosaurVocalizations)
+                return Dinosaur(dinosaurConfigs, dinosaurAudio)
             }
             else -> throw Exception("Unrecognized monster")
         }

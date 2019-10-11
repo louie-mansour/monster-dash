@@ -1,12 +1,12 @@
 package com.molasys.hermes.audio
 
-import com.molasys.hermes.monster.dinosaur.Dinosaur
+import com.molasys.hermes.monster.Monster
 
-fun updateLoopingAudio(monsterStepsBehind: Float, dinosaur: Dinosaur, background: ChangeableVolume) {
-    val dangerThreshold = dinosaur.configs.danger
+fun updateLoopingAudio(monsterStepsBehind: Float, monster: Monster, background: ChangeableVolume) {
+    val dangerThreshold = monster.danger
 
     val monsterVolume = increasingVolumeWithProximity(monsterStepsBehind, dangerThreshold)
-    dinosaur.getAudio().forEach { audio -> audio.setVolume(monsterVolume)}
+    monster.getAudio().forEach { audio -> audio.setVolume(monsterVolume)}
 
     val backgroundVolume = decreasingVolumeWithProximity(monsterStepsBehind, dangerThreshold)
     background.getAudio().forEach { audio -> audio.setVolume(backgroundVolume) }
