@@ -1,18 +1,24 @@
 package com.molasys.hermes.audio
 
-fun increasingVolumeWithProximity(monsterStepsBehind: Float, dangerThreshold: Int): Float {
-    if(monsterStepsBehind > dangerThreshold) {
+fun updateVolumesByProximity(listOfChangeableVolumes: List<ChangeableVolume>, distanceBetween: Float, dangerThreshold: Int) {
+    listOfChangeableVolumes.forEach{
+            changeableVolume -> changeableVolume.changeVolumeByDistance(distanceBetween, dangerThreshold)
+    }
+}
+
+fun increasingVolumeWithProximity(distanceBetween: Float, dangerThreshold: Int): Float {
+    if(distanceBetween > dangerThreshold) {
         return 0f
     }
-    val rawMonsterVolumeLevel = dangerThreshold - monsterStepsBehind
+    val rawMonsterVolumeLevel = dangerThreshold - distanceBetween
     return volumeLevelTranspose(rawMonsterVolumeLevel, dangerThreshold)
 }
 
-fun decreasingVolumeWithProximity(monsterStepsBehind: Float, dangerThreshold: Int): Float {
-    if(monsterStepsBehind > dangerThreshold) {
+fun decreasingVolumeWithProximity(distanceBetween: Float, dangerThreshold: Int): Float {
+    if(distanceBetween > dangerThreshold) {
         return 1f
     }
-    return volumeLevelTranspose(monsterStepsBehind, dangerThreshold)
+    return volumeLevelTranspose(distanceBetween, dangerThreshold)
 }
 
 private fun volumeLevelTranspose(linearVolumeLevel: Float, dangerThreshold: Int): Float {

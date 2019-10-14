@@ -1,33 +1,26 @@
 package com.molasys.hermes.monster
 
 import com.molasys.hermes.audio.ChangeableVolume
+import com.molasys.hermes.jog.CoversDistance
 
-interface Monster : ChangeableVolume {
+interface Monster : ChangeableVolume, CoversDistance {
     fun startChasing(timeElapsedInSeconds: Int)
 
     fun stopChasing()
 
     fun isChasing(): Boolean
 
-    fun updateDistance(numberOfSteps: Float)
+    fun coverDistance(numberOfSteps: Float)
 
     fun isRampingUpSpeed(): Boolean
 
-    fun rampUpSpeedModifier(): Float
-
-    fun isInIntimidationRange(distance: Float): Boolean
-
     fun intimidate(timeElapsedInSeconds: Int)
 
-    fun isInAttackRange(distance: Float): Boolean
-
     fun attack(timeElapsedInSeconds: Int)
-
-    fun distanceCovered(): Float
 
     fun startSpecialEffect()
 
     fun stopSpecialEffect()
 
-    fun distanceToCover(monsterStepsBehind: Float): Float
+    fun distanceToCover(): Float
 }

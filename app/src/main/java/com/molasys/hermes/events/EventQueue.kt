@@ -19,8 +19,8 @@ class EventQueue {
             is AudioEvent -> event.play()
             is MonsterEvent -> {
                 when {
-                    event.action == "start_special_effect" -> monster.startSpecialEffect()
-                    event.action == "stop_special_effect" -> monster.stopSpecialEffect()
+                    event.action == START_SPECIAL_EFFECT -> monster.startSpecialEffect()
+                    event.action == STOP_SPECIAL_EFFECT -> monster.stopSpecialEffect()
                 }
             }
         }

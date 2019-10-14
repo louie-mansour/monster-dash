@@ -1,6 +1,6 @@
 package com.molasys.hermes.jog
 
-class VirtualJog {
+class VirtualJog : CoversDistance {
     private var distancesCovered: MutableList<Float> = mutableListOf(0f)
 
     fun addDistance(distanceCovered: Float): VirtualJog {
@@ -8,7 +8,7 @@ class VirtualJog {
         return this
     }
 
-    fun distanceCovered(): Float {
+    override fun distanceCovered(): Float {
         return distancesCovered[distancesCovered.size - 1]
     }
 }

@@ -17,6 +17,11 @@ class EventQueueFactory(private val progressAudioService: ProgressAudioService) 
             eventQueue.add(AudioEvent(timeElapsedInSeconds, audioFileName, NonLoopingAudio(audioFile)))
             timeElapsedInSeconds += testConfigs.timeBetweenUpdatesInSeconds
         }
+
+        eventQueue.add(MonsterEvent(runLengthInSeconds / 3, START_SPECIAL_EFFECT))
+        eventQueue.add(MonsterEvent(runLengthInSeconds / 3 + 10, STOP_SPECIAL_EFFECT))
+        eventQueue.add(MonsterEvent(2 * runLengthInSeconds / 3, START_SPECIAL_EFFECT))
+        eventQueue.add(MonsterEvent(2 * runLengthInSeconds / 3 + 10, STOP_SPECIAL_EFFECT))
         return eventQueue
     }
 }

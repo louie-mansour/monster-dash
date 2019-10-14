@@ -2,8 +2,9 @@ package com.molasys.hermes.users
 
 import com.molasys.hermes.jog.VirtualJog
 import com.molasys.hermes.StepSensor
+import com.molasys.hermes.jog.CoversDistance
 
-class User(private val stepSensor: StepSensor) {
+class User(private val stepSensor: StepSensor) : CoversDistance {
     private val virtualJog: VirtualJog = VirtualJog()
 
     init {
@@ -21,7 +22,7 @@ class User(private val stepSensor: StepSensor) {
         }
     }
 
-    fun distanceCovered(): Float {
+    override fun distanceCovered(): Float {
         return virtualJog.distanceCovered()
     }
 }

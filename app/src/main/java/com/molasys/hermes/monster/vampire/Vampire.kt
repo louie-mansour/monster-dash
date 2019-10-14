@@ -1,4 +1,4 @@
-package com.molasys.hermes.monster.dinosaur
+package com.molasys.hermes.monster.vampire
 
 import com.molasys.hermes.audio.increasingVolumeWithProximity
 import com.molasys.hermes.jog.VirtualJog
@@ -6,16 +6,16 @@ import com.molasys.hermes.monster.Monster
 import com.molasys.hermes.monster.settings.MonsterAudio
 import com.molasys.hermes.monster.settings.MonsterConfigs
 
-class Dinosaur(
+class Vampire(
     configs: MonsterConfigs,
     private val audio: MonsterAudio
 ) : Monster {
     private val sprintingModifier = 1.1f
     private val virtualJog: VirtualJog = VirtualJog()
     private val rampUpTime = 5
+    private var remainingRampUpTime = rampUpTime
     private val roarTimeBetween = configs.roarTimeBetween
 
-    private var remainingRampUpTime = rampUpTime
     private var isChasing = false
     private var stepsPerSecond = configs.stepsPerSecond
 
