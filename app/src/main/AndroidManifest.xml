@@ -10,7 +10,17 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name="com.molasys.hermes.activities.MainActivity"
+                android:name=".activities.SelectMonsterActivity"
+                android:label="@string/title_activity_select_monster"
+                android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".activities.JogActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -19,11 +29,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <!--<service-->
-            <!--android:name=".MonsterRunService"-->
-            <!--android:exported="false"-->
-            <!--android:description="Service used by 'Monster Run' to track distance and dispatch monsters during a jog."-->
-        <!--/>-->
     </application>
 
 </manifest>

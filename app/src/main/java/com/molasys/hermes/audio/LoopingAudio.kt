@@ -19,5 +19,6 @@ open class LoopingAudio(private var mediaPlayer: MediaPlayer) {
 
     fun stop() {
         mediaPlayer.stop()
+        mediaPlayer.prepareAsync()
     }
 }

@@ -23,7 +23,7 @@ class DinosaurSettings {
         }
 
         override fun buildConfigs(testConfigs: TestConfigs): MonsterConfigs {
-            return MonsterConfigs(testConfigs.danger, testConfigs.stepsPerSecond)
+            return MonsterConfigs(testConfigs.roarTimeBetween, testConfigs.stepsPerSecond)
         }
     }
 }

@@ -24,16 +24,16 @@ import com.molasys.hermes.monster.DINOSAUR
 import com.molasys.hermes.monster.MonsterFactory
 import com.molasys.hermes.surroundings.Background
 import com.molasys.hermes.users.User
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_jog.*
 
-class MainActivity : AppCompatActivity(), SensorEventListener {
+class JogActivity : AppCompatActivity(), SensorEventListener {
 
     private val stepSensor: StepSensor = StepSensor()
     private var runTimeInSeconds = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_jog)
 
         val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         val stepsSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)

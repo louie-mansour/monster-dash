@@ -10,12 +10,13 @@ class Zombie(
     configs: MonsterConfigs,
     private val audio: MonsterAudio
 ) : Monster {
-    private val sprintingModifier = 1.1f
+    private val blendInSpeedModifier = 0.3f
     private val virtualJog: VirtualJog = VirtualJog()
     private val rampUpTime = 5
     private var remainingRampUpTime = rampUpTime
     private val roarTimeBetween = configs.roarTimeBetween
 
+    private var isSpecialEffectActive = false
     private var isChasing = false
     private var stepsPerSecond = configs.stepsPerSecond
 
@@ -65,15 +66,15 @@ class Zombie(
     override fun startSpecialEffect() {
         audio.footsteps.stop()
         audio.sprintingFootsteps.play()
-        audio.sprintingFootsteps.setVolume(1f)
-        stepsPerSecond *= sprintingModifier
+        stepsPerSecond *= blendInSpeedModifier
+        isSpecialEffectActive = true
     }
 
     override fun stopSpecialEffect() {
         audio.sprintingFootsteps.stop()
         audio.footsteps.play()
-        audio.footsteps.setVolume(1f)
-        stepsPerSecond /= sprintingModifier
+        stepsPerSecond /= blendInSpeedModifier
+        isSpecialEffectActive = false
     }
 
     override fun changeVolumeByDistance(distanceBetween: Float, dangerThreshold: Int) {
@@ -85,10 +86,21 @@ class Zombie(
     override fun distanceToCover(): Float {
         val stepsPerSecond = stepsPerSecond
 
+        if(isSpecialEffectActive) {
+            return stepsPerSecond
+        }
+
         return distanceCovered() + when (isRampingUpSpeed()) {
             true -> stepsPerSecond * rampUpSpeedModifier()
             false -> stepsPerSecond
         }
+    }
+
+    fun isInAttackRange(distanceBetween: Float): Boolean {
+        if(isSpecialEffectActive) {
+            return distanceBetween < -5 || distanceBetween > 5
+        }
+        return distanceBetween >= 0
     }
 
     private fun rampUpSpeedModifier(): Float {

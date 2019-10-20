@@ -10,9 +10,9 @@ class Chupacabra(
     configs: MonsterConfigs,
     private val audio: MonsterAudio
 ) : Monster {
-    private val sprintingModifier = 1.1f
+    private val sprintingModifier = 1.5f
     private val virtualJog: VirtualJog = VirtualJog()
-    private val rampUpTime = 5
+    private val rampUpTime = 3
     private var remainingRampUpTime = rampUpTime
     private val roarTimeBetween = configs.roarTimeBetween
 
